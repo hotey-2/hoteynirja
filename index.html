@@ -14,6 +14,16 @@
         overflow: hidden;
         font-family: Arial, sans-serif;
         cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    /* BLINK EFFECT */
+    .blink {
+        animation: screenBlink 0.45s infinite alternate;
+    }
+    @keyframes screenBlink {
+        0% { background: #111; }
+        100% { background: #d6006f; } /* neon pink vibe */
     }
 
     .container {
@@ -127,7 +137,6 @@
     const signature = document.getElementById("signature");
     const btn = document.getElementById("secretBtn");
     const msg = document.getElementById("secretMsg");
-    const box = document.getElementById("mainBox");
 
     // Open Door
     function openDoor() {
@@ -135,7 +144,10 @@
         rightDoor.style.transform = "rotateY(100deg)";
         photo.style.opacity = "1";
         signature.style.opacity = "1";
+
         music.play();
+        document.body.classList.add("blink");  // start blink effect with music
+
         setTimeout(() => {
             btn.style.display = "block";
             btn.style.opacity = "1";
@@ -162,7 +174,7 @@
     }
     setInterval(makeHeart, 800);
 
-    // Fireworks on click
+    // Fireworks
     document.body.addEventListener("click", (e) => {
         for (let i = 0; i < 10; i++) {
             const spark = document.createElement("div");
@@ -181,7 +193,7 @@
         }
     });
 
-    /* Spark animation */
+    /* Firework animation generator */
     const style = document.createElement('style');
     style.innerHTML = `
     @keyframes explode {
