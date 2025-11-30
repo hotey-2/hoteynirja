@@ -1,207 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>Love Door</title>
 <style>
-    body {
-        margin: 0;
-        background: #111;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: Arial, sans-serif;
+}
 
-    /* BLINK EFFECT */
-    .blink {
-        animation: screenBlink 0.45s infinite alternate;
-    }
-    @keyframes screenBlink {
-        0% { background: #111; }
-        100% { background: #d6006f; } /* neon pink vibe */
-    }
+/* Door */
+#door {
+  width: 280px;
+  height: 450px;
+  background: url('love.png') center/cover no-repeat;
+  border: 4px solid #700;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  cursor: pointer;
+  transition: 1.4s;
+  filter: brightness(0.3);
+}
 
-    .container {
-        position: relative;
-        width: 260px;
-        height: 420px;
-        border: 4px solid #444;
-        border-radius: 10px;
-        background: #272727;
-        box-shadow: 0 0 30px rgba(255,0,72,0.6);
-    }
+/* When opened */
+.open {
+  transform: translate(-50%,-50%) rotateY(90deg);
+  filter: brightness(1);
+}
 
-    .door {
-        position: absolute;
-        width: 50%;
-        height: 100%;
-        background: #8b4513;
-        border: 4px solid #5a2f0e;
-        transition: transform 1s;
-        cursor: pointer;
-    }
+/* Stranger Things effect photo frame */
+#photo {
+  display: none;
+  width: 350px;
+  height: 450px;
+  background: url('love.png') center/cover no-repeat;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  border: 6px solid red;
+  box-shadow: 0 0 25px red, inset 0 0 30px red;
+  animation: flicker 0.25s infinite alternate;
+}
 
-    .door.right { left: 50%; transform-origin: right; }
-    .door.left { transform-origin: left; }
+/* Red flicker + glitch */
+@keyframes flicker {
+  0% { filter: brightness(0.4) hue-rotate(0deg); }
+  50% { filter: brightness(1) hue-rotate(-15deg); }
+  100% { filter: brightness(0.6) hue-rotate(-5deg); }
+}
 
-    .photo {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 1.5s;
-        border-radius: 5px;
-    }
+/* Floating hearts */
+.heart {
+  position: absolute;
+  font-size: 25px;
+  animation: float 4s linear infinite;
+  color: #ff4b87;
+}
+@keyframes float {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-200px); opacity: 0; }
+}
 
-    .signature {
-        position: absolute;
-        bottom: 8px;
-        width: 100%;
-        text-align: center;
-        font-size: 18px;
-        color: #ff1d8e;
-        font-weight: bold;
-        opacity: 0;
-        transition: opacity 2s;
-        text-shadow: 0 0 8px #ff1d8e;
-    }
+/* Button */
+#btn {
+  display: none;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 26px;
+  background: red;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px red;
+}
 
-    /* Floating heart animation */
-    .heart {
-        position: fixed;
-        font-size: 22px;
-        animation: floatUp 4s linear;
-        opacity: 0.8;
-    }
-    @keyframes floatUp {
-        0% { transform: translateY(0) scale(1); opacity: 1; }
-        100% { transform: translateY(-200px) scale(1.8); opacity: 0; }
-    }
+/* Secret message */
+#secret {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 87%;
+  text-align: center;
+  color: #ff99c9;
+  font-size: 24px;
+  font-weight: bold;
+  animation: glow 1s infinite alternate;
+}
+@keyframes glow {
+  from { text-shadow: 0 0 10px red; }
+  to { text-shadow: 0 0 30px red; }
+}
 
-    /* Secret button */
-    #secretBtn {
-        position: absolute;
-        bottom: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px 18px;
-        font-size: 15px;
-        background: #ff1d8e;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 1.5s;
-        display: none;
-    }
+/* Signature */
+#sig {
+  position: absolute;
+  width: 100%;
+  bottom: 12px;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  opacity: 0.85;
+}
 
-    #secretMsg {
-        position: absolute;
-        top: 10px;
-        width: 100%;
-        text-align: center;
-        color: #ffccff;
-        font-size: 20px;
-        font-weight: bold;
-        opacity: 0;
-        transition: opacity 1.5s;
-        text-shadow: 0 0 10px #ff4dbe;
-    }
+/* Fireworks */
+canvas { position: absolute; left:0; top:0; }
 </style>
 </head>
 <body>
 
-<audio id="bgMusic" src="music.mp3"></audio>
+<audio id="music" src="music.mp3"></audio>
+<div id="door"></div>
+<div id="photo"></div>
+<button id="btn">Click Me 💌</button>
+<div id="secret">I will love you forever ❤️</div>
+<div id="sig">Made by apka engineer hotey ❤️</div>
 
-<div class="container" id="mainBox">
-    <img src="love.png" class="photo" id="photo">
-    <div class="door left"></div>
-    <div class="door right"></div>
-    <button id="secretBtn">Click Me 💌</button>
-    <div id="secretMsg">I will love you forever ❤️</div>
-    <div class="signature" id="signature">Made by apka engineer hotey ❤️</div>
-</div>
+<canvas id="fw"></canvas>
 
 <script>
-    const leftDoor = document.querySelector(".left");
-    const rightDoor = document.querySelector(".right");
-    const photo = document.getElementById("photo");
-    const music = document.getElementById("bgMusic");
-    const signature = document.getElementById("signature");
-    const btn = document.getElementById("secretBtn");
-    const msg = document.getElementById("secretMsg");
+let door = document.getElementById("door");
+let photo = document.getElementById("photo");
+let music = document.getElementById("music");
+let btn = document.getElementById("btn");
+let secret = document.getElementById("secret");
 
-    // Open Door
-    function openDoor() {
-        leftDoor.style.transform = "rotateY(-100deg)";
-        rightDoor.style.transform = "rotateY(100deg)";
-        photo.style.opacity = "1";
-        signature.style.opacity = "1";
+door.onclick = () => {
+  door.classList.add("open");
+  music.play();
+  setTimeout(() => {
+    door.style.display = "none";
+    photo.style.display = "block";
+    btn.style.display = "block";
+    startHearts();
+  }, 1300);
+};
 
-        music.play();
-        document.body.classList.add("blink");  // start blink effect with music
+// Secret button
+btn.onclick = () => secret.style.display = "block";
 
-        setTimeout(() => {
-            btn.style.display = "block";
-            btn.style.opacity = "1";
-        }, 1500);
+// Floating hearts generator
+function startHearts() {
+  setInterval(() => {
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤️";
+    h.style.left = Math.random() * window.innerWidth + "px";
+    h.style.top = "90%";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 4000);
+  }, 400);
+}
+
+/* Fireworks on screen click */
+let canvas = document.getElementById("fw");
+let ctx = canvas.getContext("2d");
+canvas.width = innerWidth; canvas.height = innerHeight;
+window.addEventListener("resize", ()=>{ canvas.width = innerWidth; canvas.height = innerHeight; });
+
+document.addEventListener("click", firework);
+function firework(e) {
+  let x = e.clientX, y = e.clientY, p = [];
+  for (let i=0;i<30;i++) p.push({
+    x, y, a: Math.random()*Math.PI*2,
+    r: Math.random()*5+2, v: Math.random()*4+2
+  });
+  let t = setInterval(()=>{
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    for (let o of p){
+      o.x += Math.cos(o.a)*o.v;
+      o.y += Math.sin(o.a)*o.v;
+      ctx.fillStyle="rgba(255,0,0,1)";
+      ctx.fillRect(o.x,o.y,o.r,o.r);
     }
-
-    leftDoor.addEventListener("click", openDoor);
-    rightDoor.addEventListener("click", openDoor);
-
-    // Secret message button
-    btn.addEventListener("click", () => {
-        msg.style.opacity = "1";
-    });
-
-    // Floating hearts
-    function makeHeart() {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "💗";
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.top = window.innerHeight + "px";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
-    }
-    setInterval(makeHeart, 800);
-
-    // Fireworks
-    document.body.addEventListener("click", (e) => {
-        for (let i = 0; i < 10; i++) {
-            const spark = document.createElement("div");
-            spark.style.position = "fixed";
-            spark.style.left = e.pageX + "px";
-            spark.style.top = e.pageY + "px";
-            spark.style.width = "6px";
-            spark.style.height = "6px";
-            spark.style.borderRadius = "50%";
-            spark.style.background = `hsl(${Math.random()*360},100%,60%)`;
-            spark.style.transform = "translate(-3px,-3px)";
-            spark.style.animation = "explode 700ms ease-out forwards";
-            spark.style.pointerEvents = "none";
-            document.body.appendChild(spark);
-            setTimeout(() => spark.remove(), 700);
-        }
-    });
-
-    /* Firework animation generator */
-    const style = document.createElement('style');
-    style.innerHTML = `
-    @keyframes explode {
-        from { transform: translate(0,0) scale(1); opacity: 1; }
-        to { transform: translate(${Math.random()*200-100}px, ${Math.random()*200-100}px) scale(0.3); opacity: 0; }
-    }`;
-    document.head.appendChild(style);
+  },30);
+  setTimeout(()=> clearInterval(t),700);
+}
 </script>
-
 </body>
 </html>
