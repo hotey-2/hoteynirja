@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Door</title>
+<style>
+    body {
+        margin: 0;
+        background: #111;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        position: relative;
+        width: 260px;
+        height: 420px;
+        border: 4px solid #444;
+        border-radius: 10px;
+        background: #272727;
+        box-shadow: 0 0 30px rgba(255,0,72,0.6);
+    }
+
+    .door {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        background: #8b4513;
+        border: 4px solid #5a2f0e;
+        transition: transform 1s;
+        cursor: pointer;
+    }
+
+    .door.right { left: 50%; transform-origin: right; }
+    .door.left { transform-origin: left; }
+
+    .photo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1.5s;
+        border-radius: 5px;
+    }
+
+    .signature {
+        position: absolute;
+        bottom: 8px;
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        color: #ff1d8e;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 2s;
+        text-shadow: 0 0 8px #ff1d8e;
+    }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" src="music.mp3"></audio>
+
+<div class="container">
+    <img src="love.png" class="photo" id="photo">
+    <div class="door left"></div>
+    <div class="door right"></div>
+    <div class="signature" id="signature">Made by apka engineer hotey ❤️</div>
+</div>
+
+<script>
+    const leftDoor = document.querySelector(".left");
+    const rightDoor = document.querySelector(".right");
+    const photo = document.getElementById("photo");
+    const music = document.getElementById("bgMusic");
+    const signature = document.getElementById("signature");
+
+    function openDoor() {
+        leftDoor.style.transform = "rotateY(-100deg)";
+        rightDoor.style.transform = "rotateY(100deg)";
+        photo.style.opacity = "1";
+        signature.style.opacity = "1";   // show signature after open
+        music.play();
+    }
+
+    leftDoor.addEventListener("click", openDoor);
+    rightDoor.addEventListener("click", openDoor);
+</script>
+
+</body>
+</html>
