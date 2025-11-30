@@ -13,6 +13,7 @@
         height: 100vh;
         overflow: hidden;
         font-family: Arial, sans-serif;
+        cursor: pointer;
     }
 
     .container {
@@ -60,16 +61,61 @@
         transition: opacity 2s;
         text-shadow: 0 0 8px #ff1d8e;
     }
+
+    /* Floating heart animation */
+    .heart {
+        position: fixed;
+        font-size: 22px;
+        animation: floatUp 4s linear;
+        opacity: 0.8;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-200px) scale(1.8); opacity: 0; }
+    }
+
+    /* Secret button */
+    #secretBtn {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 18px;
+        font-size: 15px;
+        background: #ff1d8e;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 1.5s;
+        display: none;
+    }
+
+    #secretMsg {
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        text-align: center;
+        color: #ffccff;
+        font-size: 20px;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 1.5s;
+        text-shadow: 0 0 10px #ff4dbe;
+    }
 </style>
 </head>
 <body>
 
 <audio id="bgMusic" src="music.mp3"></audio>
 
-<div class="container">
+<div class="container" id="mainBox">
     <img src="love.png" class="photo" id="photo">
     <div class="door left"></div>
     <div class="door right"></div>
+    <button id="secretBtn">Click Me 💌</button>
+    <div id="secretMsg">I will love you forever ❤️</div>
     <div class="signature" id="signature">Made by apka engineer hotey ❤️</div>
 </div>
 
@@ -79,17 +125,70 @@
     const photo = document.getElementById("photo");
     const music = document.getElementById("bgMusic");
     const signature = document.getElementById("signature");
+    const btn = document.getElementById("secretBtn");
+    const msg = document.getElementById("secretMsg");
+    const box = document.getElementById("mainBox");
 
+    // Open Door
     function openDoor() {
         leftDoor.style.transform = "rotateY(-100deg)";
         rightDoor.style.transform = "rotateY(100deg)";
         photo.style.opacity = "1";
-        signature.style.opacity = "1";   // show signature after open
+        signature.style.opacity = "1";
         music.play();
+        setTimeout(() => {
+            btn.style.display = "block";
+            btn.style.opacity = "1";
+        }, 1500);
     }
 
     leftDoor.addEventListener("click", openDoor);
     rightDoor.addEventListener("click", openDoor);
+
+    // Secret message button
+    btn.addEventListener("click", () => {
+        msg.style.opacity = "1";
+    });
+
+    // Floating hearts
+    function makeHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "💗";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = window.innerHeight + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }
+    setInterval(makeHeart, 800);
+
+    // Fireworks on click
+    document.body.addEventListener("click", (e) => {
+        for (let i = 0; i < 10; i++) {
+            const spark = document.createElement("div");
+            spark.style.position = "fixed";
+            spark.style.left = e.pageX + "px";
+            spark.style.top = e.pageY + "px";
+            spark.style.width = "6px";
+            spark.style.height = "6px";
+            spark.style.borderRadius = "50%";
+            spark.style.background = `hsl(${Math.random()*360},100%,60%)`;
+            spark.style.transform = "translate(-3px,-3px)";
+            spark.style.animation = "explode 700ms ease-out forwards";
+            spark.style.pointerEvents = "none";
+            document.body.appendChild(spark);
+            setTimeout(() => spark.remove(), 700);
+        }
+    });
+
+    /* Spark animation */
+    const style = document.createElement('style');
+    style.innerHTML = `
+    @keyframes explode {
+        from { transform: translate(0,0) scale(1); opacity: 1; }
+        to { transform: translate(${Math.random()*200-100}px, ${Math.random()*200-100}px) scale(0.3); opacity: 0; }
+    }`;
+    document.head.appendChild(style);
 </script>
 
 </body>
